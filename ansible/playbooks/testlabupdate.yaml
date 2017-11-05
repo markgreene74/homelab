@@ -1,0 +1,26 @@
+--- # Testlab VMs update, make sure the basic set of packages is installed
+- hosts: testlab
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: make sure basic packages are installed
+    yum:
+      name:
+        - epel-release
+        - deltarpm
+        - yum-utils
+        - bind-utils
+        - wget
+        - tcpdump
+        - curl
+        - tmux
+        - nmap-ncat
+        - traceroute
+        - open-vm-tools
+        - ntpdate
+        - ntp
+      state: present #latest or present
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
