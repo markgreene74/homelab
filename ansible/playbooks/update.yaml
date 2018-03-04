@@ -1,0 +1,25 @@
+--- # Install baseline software and check for updates
+# use the package module instead of the yum module
+# pre-requisites:
+#   ssh-copy-id user@server
+#   on each @server, change sudoers to allow user to sudo/become root
+- hosts: allhosts
+  gather_facts: yes
+  connection: ssh
+  remote_user: user
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Log playbook start
+    raw: "echo -n 'Start: ' >> /var/log/updateplaybook.log; date >> /var/log/updateplaybook.log"
+  - name: Install baseline software
+    package: pkg={{ item }} state=present
+    with_items:
+    - epel-release
+    - wget
+    - tcpdump
+    - curl
+  - name: Install updates
+    package: name=* state=latest
+  - name: Log playbook stop
+    raw: "echo -n 'Stop:  ' >> /var/log/updateplaybook.log; date  >> /var/log/updateplaybook.log; echo '' >> /var/log/updateplaybook.log"
